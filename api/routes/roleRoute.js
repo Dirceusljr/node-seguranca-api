@@ -5,10 +5,10 @@ const RoleController = require("../controllers/roleController");
 const router = Router()
 
 router
-    .post('/roles', RoleController.cadastrar)
-    .get('/roles', RoleController.buscarTodosOsRoles)
-    .get('/roles/id/:id', RoleController.buscarRolePorId)
-    .put('/roles/id/:id', RoleController.editarRole)
-    .delete('/roles/id/:id', RoleController.deletarRole)
+    .post('/role', RoleController.cadastrar)
+    .get('/role', RoleController.buscarTodosOsRoles)
+    .get('/role/:id', RoleController.buscarRolePorId)
+    .put('/role/:id', RoleController.editarRole)
+    .delete('/role/:id', RoleController.deletarRole)
 
 module.exports = router

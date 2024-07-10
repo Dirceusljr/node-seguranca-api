@@ -43,7 +43,6 @@ class RoleController {
 
     try {
       const role = await roleService.editarRole({ id, nome, descricao });
-      console.log('Controller: ' + role)
 
       res.status(200).send(role);
     } catch (error) {
