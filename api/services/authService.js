@@ -1,4 +1,7 @@
+const { sign } = require('jsonwebtoken')
 const database = require('../models')
+const { compare } = require('bcryptjs')
+const jsonSecret = require('../config/jsonSecret')
 
 class AuthService {
     async login(dto) {
@@ -13,7 +16,20 @@ class AuthService {
             throw new Error('Usuário não cadastrado.')
         }
 
-        return usuario
+        const senhasIguais = compare(dto.senha, usuario.senha)
+
+        if(!senhasIguais) {
+            throw new Error('Usuário ou senha inválido.')
+        }
+
+        const accessToken = sign({
+            id: usuario.id,
+            email: usuario.email
+        }, jsonSecret.secret, {
+            expiresIn: 86400
+        })
+
+        return { accessToken }
     }
 
 }
