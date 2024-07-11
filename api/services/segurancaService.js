@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, where } = require("sequelize");
 const database = require("../models");
 
 class SegurancaService {
@@ -68,6 +68,49 @@ class SegurancaService {
       return novoUsuario
 
 }
+
+  async cadastrarPermissoesRoles(dto) {
+    const role = await database.roles.findOne({
+      include: [{
+        model: database.permissoes,
+        as: 'roles_das_permissoes',
+        attributes: ['id', 'nome', 'descricao']
+      }],
+      where: {
+        id: dto.roleId
+      }
+    })
+
+    if(!role) {
+      throw new Error('Role não cadastrada.')
+    }
+
+    const permissoesCadastradas = await database.permissoes.findAll({
+      where: {
+        id: {
+          [Sequelize.Op.in]: dto.permissoes
+        }
+      }
+    })
+
+    await role.removeRoles_das_permissoes(role.roles_das_permissoes)
+
+    await role.addRoles_das_permissoes(permissoesCadastradas)
+
+    const novaRole = await database.roles.findOne({
+      include: [{
+        model: database.permissoes,
+        as: 'roles_das_permissoes',
+        attributes: ['id', 'nome', 'descricao']
+      }],
+      where: {
+        id: dto.roleId
+      }
+    })
+
+    return novaRole
+
+  }
 }
 
 module.exports = SegurancaService;
