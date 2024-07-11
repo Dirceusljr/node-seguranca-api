@@ -7,7 +7,7 @@ const roles = (listaRoles) => {
         const usuario = await database.usuarios.findOne({
             include: [
                 {
-                    model: database.role,
+                    model: database.roles,
                     as: 'usuario_roles',
                     attributes: ['id', 'nome']
                 }
